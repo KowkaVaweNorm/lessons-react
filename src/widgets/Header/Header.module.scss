@@ -1,0 +1,33 @@
+.header {
+  background-color: #343131;
+  border-radius: 10px;
+  padding: 10px 20px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff; // Цвет текста
+}
+
+.list {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+}
+
+.list_item {}
+
+.list_item_link {
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 16px;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #ff4500;
+  }
+}

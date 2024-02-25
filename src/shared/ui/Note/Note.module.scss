@@ -1,0 +1,31 @@
+// Note.module.scss
+
+.note {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ffcc00;
+  border-radius: 4px;
+  min-height: 30px;
+}
+
+.icon {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: transparent;
+  color: #ffcc00; // Желтый цвет буквы
+  border: 2px solid #ffcc00; // Круглая граница цвета буквы
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 10px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); // Тень сзади
+}

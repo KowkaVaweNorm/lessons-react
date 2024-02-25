@@ -1,0 +1,50 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    /* Linting */
+    "strict": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,  // тип any запрещен к использолванию?
+    "strictNullChecks": true, // При true разрешает возвращать null вместо конкретного типа
+    "noImplicitReturns": true, // Во всех случаях код производит return?
+    "noUncheckedIndexedAccess": true, // Запрещать использование значения которого может не быть по этому ключу
+    "noImplicitOverride": true,  // прописывать перед прегруженными свойствами и методавми ключевое слово override
+    "baseUrl": ".",
+    "paths": {
+        "@/*": ["./src/*"]
+    },
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true
+  },
+  "include": [
+    "src",
+    "global.d.ts"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ], 
+  "exclude": [
+    "node_modules", 
+    "build", 
+    "*.test.ts", 
+    "*.test.tsx"
+]
+}
