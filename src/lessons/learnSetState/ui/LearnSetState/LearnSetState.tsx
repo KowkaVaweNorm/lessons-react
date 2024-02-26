@@ -4,11 +4,12 @@ import { classNames } from '@/shared/libs/utils/classNames/classNames';
 import { Block } from '@/shared/ui/Block/Block';
 import { Note } from '@/shared/ui/Note/Note';
 import { Code } from '@/shared/ui/Code/Code';
-import { useConditionObjectIs } from '../../model/hooks/useConditionObjectIs/useConditionObjectIs';
 import TodoList from '../TodoList/TodoList';
 import { flushSync } from 'react-dom';
 import { RenderCounter } from '@/shared/ui/RenderCounter/RenderCounter';
 import { Quote } from '@/shared/ui/Quote/Quote';
+import { Counter } from '@/shared/ui/Counter/Conter';
+import { SetStateObject } from '../SetStateObject/SetStateObject';
 interface IlearnSetStateProps {
   className?: string
 }
@@ -19,13 +20,10 @@ const LearnSetState = memo((props: IlearnSetStateProps): JSX.Element => {
   } = props;
   const [count, setCount] = useState(0)
   const countRef = useRef(count);
-
+  const [, forceUpdate] = useReducer(v => v+1, 0)
   useEffect(() => {
     countRef.current = count;
   }, [count])
-
-  const [_, forceUpdate] = useReducer((x) => x + 1, 0);
-  const [obj, noRenderFunction] = useConditionObjectIs();
 
   const bathingCalls =  useCallback(() => {
     setCount(prev => ++prev); // Синхронно и попадет в батчинг
@@ -72,33 +70,52 @@ const LearnSetState = memo((props: IlearnSetStateProps): JSX.Element => {
       <RenderCounter />
         <Block
           className={cls.block}
-          title='1. Вызов setState говорит реакту сделай когда нибудь при ближайшей возможности ререндер'
+          title='1. Вызов setState не производит ререндер мгновенно'
+          text='Код сразу после setState работает с прежним значением, а не новым. Иными словами вызов setState асинхронный.'
           >
-            <p>
-            Код сразу после setState работает с прежним значением, а не новым
-          Выдержка из документации:
-          <Quote author='Документация Реакт'>
-            Функция set обновляет переменную состояния только для следующего рендера. 
+          <Quote author='react.dev' link='https://react.dev/reference/react/useState#setstate-caveats'>
+            Функция set обновляет переменную состояния только для <b>следующего</b> рендера. 
             Если вы прочитаете переменную state после вызова функции set, вы получите старое значение, которое было на экране до вашего вызова. 
           </Quote> 
-          
-            </p>
+          <Note >
+            <Code text='import { useCallback, useState } from "react"
+
+export const Counter = () =>{
+  const [count, setCount] = useState(0);
+  const handleClick = () =>{
+    setCount(count + 1);
+    console.log("Count:", count); // Здесь значение до увелечения
+  }
+  return (<>  
+  <span>{count}</span>
+  <button onClick={handleClick}>Increment</button>
+  </>
+  )
+}' />
+          </Note>
+          <Counter />
+            
             </Block>
         <Block
           className={cls.block}
           title='2. Проверка нового значения с помощью Object.is.'
           text='Если мы указали в setState новое значение 
           которое равно согласно Object.is старому то ререндера не будет. 
-          Обратите внимание что ссылочные типы сравниваются по ссылке
-          Выдержка из документации: "Если новое значение, которое вы предоставляете, идентично текущему состоянию, что определяется сравнением Object.is, 
+          Обратите внимание что ссылочные типы сравниваются по ссылке' >
+          
+          <Quote link='https://react.dev/reference/react/useState#setstate-caveats' author='react.dev' text='Если новое значение, которое вы предоставляете, идентично текущему состоянию, 
+          что определяется сравнением Object.is, 
           React пропустит повторный рендеринг компонента и его дочерних элементов. Это оптимизация. 
-          Хотя в некоторых случаях React может потребоваться вызвать ваш компонент, прежде чем пропустить дочерние элементы, это не должно повлиять на ваш код."' />
-        <Note className={cls.block}>
+          Хотя в некоторых случаях React может потребоваться вызвать ваш компонент, 
+          прежде чем пропустить дочерние элементы, это не должно повлиять на ваш код.'></Quote>
+
+          
+        <Note style={{marginTop: '10px'}}>
           <Code text=' // Примеры для ===
   console.log(NaN === NaN);    // false
   console.log(0 === -0);        // true
   console.log(null === undefined);  // true
-
+  
   // Примеры для Object.is
   console.log(Object.is(NaN, NaN));    // true
   console.log(Object.is(0, -0));        // false
@@ -106,31 +123,29 @@ const LearnSetState = memo((props: IlearnSetStateProps): JSX.Element => {
         </Note>
         <Note className={cls.block}>
           <Code text=' 
-          export const useConditionObjectIs = (newName?: string) => {
-            const srcObj = {
-              name: "source object",
-            };
-            const [obj, setObj] = useState(srcObj);
-            const noRenderFunction = useCallback(() => {
-              const newSrcObj = srcObj;
-              newSrcObj.name = newName ?? "New name";
-              console.log("Объекты одинаковые? ", Object.is(srcObj, newSrcObj));
-          
-              setObj(newSrcObj); // Здесь рендера не будет,
-              // Но при следующем рендере, значение обновится
-            }, []);
-            return [obj, noRenderFunction];
-          };
-          
-          const [obj, noRenderFunction] = useConditionObjectIs();
+         import { useState } from "react";
+
+         export const SetStateObject = () =>{
+           const [data, setData] = useState({ value: 0 });
+         
+           const handleClick = () => {
+             // Передача ссылочного типа данных напрямую
+             data.value = Math.random();
+             setData(data);
+           };
+         
+           return (
+             <div>
+               <p>Value: {data.value}</p>
+               <button onClick={handleClick}>Increment</button>
+             </div>
+           );
+         }
           ' />
         </Note>
-        <button className={cls.button} onClick={noRenderFunction}>
-          obj is  {JSON.stringify(obj)}
-        </button> {'->'}
-        <button className={cls.button} onClick={forceUpdate}>
-          Rerender
-        </button>
+        <SetStateObject />
+        <button style={{ marginTop: '10px' }} onClick={() => {forceUpdate() }}>Принудительно вызвать ререндер страницы</button>
+          </Block>
         <Block
           className={cls.block}
           title='3. Батчинг.'

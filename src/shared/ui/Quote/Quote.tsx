@@ -5,6 +5,7 @@ import { memo } from 'react';
 interface IQuoteProps {
   text?: string
   author?: string
+  link?: string
   className?: string
   children?: React.ReactNode
 }
@@ -13,6 +14,7 @@ export const Quote = memo((props: IQuoteProps): JSX.Element => {
   const {
     author,
     text,
+    link,
     className = '',
     children
   } = props;
@@ -20,7 +22,8 @@ export const Quote = memo((props: IQuoteProps): JSX.Element => {
     <blockquote className={classNames(cls.styled_quote, {}, [className])}>
       {text && <p>{text}</p>}
       <p>{children}</p>
-      {author && <footer>{author}</footer>}
+     
+      {author && <footer> <a href='https://react.dev/reference/react/useState#setstate-caveats'>{author}</a></footer>}
     </blockquote>
   );
 });

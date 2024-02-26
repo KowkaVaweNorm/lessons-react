@@ -1,14 +1,24 @@
 import { classNames } from '@/shared/libs/utils/classNames/classNames';
 import cls from './Note.module.scss';
-import { memo } from 'react';
+import { CSSProperties, memo } from 'react';
 
-export const Note = memo((
-  { className, children }:
-    { className?: string, children?: React.ReactNode }) => {
+interface IProps {
+  style?: CSSProperties
+  className?: string
+  children?: React.ReactNode
+}
+
+export const Note = memo((props: IProps) => {
+  const {
+    style,
+    className, 
+    children,
+    ...otherProps  
+  } = props
   return (
-    <div className={
+    <div style={style} className={
       classNames(cls.note, {}, [className])
-    }>
+    } {...otherProps}>
       <div className={cls.icon}>i</div>
       {children}
     </div>
